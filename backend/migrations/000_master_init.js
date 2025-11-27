@@ -120,6 +120,9 @@ export async function up(knex) {
       table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
 
       table.string("company_name", 150).notNullable();
+      table.string("company_email", 150).notNullable().unique();
+      table.string("company_phone", 20);
+      table.string("company_website", 200);
 
       table
         .uuid("industry_type")
@@ -148,6 +151,7 @@ export async function up(knex) {
       table.index(["plan_id"], "idx_tenants_plan");
       table.index(["status"], "idx_tenants_status");
       table.index(["company_name"], "idx_tenants_company_name");
+      table.index(["company_email"], "idx_tenants_company_email");
     });
   }
 

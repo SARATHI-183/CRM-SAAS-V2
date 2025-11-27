@@ -8,9 +8,9 @@ export default {
     connection: {
       host: process.env.DB_HOST || '127.0.0.1',
       port: process.env.DB_PORT || 5432,
-      database: process.env.DB_NAME || 'crm_saas',
+      database: process.env.DB_NAME || 'crm_dev', 
       user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'password',
+      password: process.env.DB_PASS || '123456',
     },
     migrations: {
       directory: './migrations',

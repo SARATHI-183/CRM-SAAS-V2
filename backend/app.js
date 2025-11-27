@@ -31,9 +31,9 @@ app.get('/api/health', (req, res) => {
 // ----------------------
 // PLACEHOLDER ROUTES
 // ----------------------
-app.use('/api/tenants', tenantRoutes);
+app.use('/api/v1/tenants', tenantRoutes);
 
-app.get('/api/superadmin', (req, res) => {
+app.get('/api/v1/superadmin', (req, res) => {
   res.json({ message: 'Super Admin API working!' });
 });
 
