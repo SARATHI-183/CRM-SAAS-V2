@@ -1,0 +1,14 @@
+# Ignore all node_modules everywhere
+node_modules/
+
+# Ignore environment variables
+.env
+.env.*
+
+# Ignore build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
