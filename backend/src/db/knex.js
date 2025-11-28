@@ -1,6 +1,6 @@
 // db/knex.js
 import knexLib from 'knex';
-import knexConfig from '../knexfile.js';
+import knexConfig from '../../knexfile.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
