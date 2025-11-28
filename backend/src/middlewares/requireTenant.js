@@ -16,7 +16,7 @@ export default function requireTenant(req, res, next) {
   if (!req.tenant || !req.db) {
     return res.status(403).json({
       message:
-        "Tenant context required. Make sure tenantResolver runs before this middleware.",
+        "Tenant context required. Ensure tenantResolver is applied.",
     });
   }
   next();

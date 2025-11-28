@@ -9,8 +9,10 @@ import tenantResolver from './middlewares/tenantResolver.js';
 import requireTenant from './middlewares/requireTenant.js';
 import { knex } from './db/knex.js'; // we'll create this file
 
-import tenantRoutes from './routes/tenants.routes.js';
+
 import usersRoutes from './routes/users.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import superadminRoutes from './routes/superadmin.routes.js';
 // import contactsRoutes from './routes/contacts.routes.js';
 import leadsRoutes from './routes/leads.routes.js';
 
@@ -46,7 +48,11 @@ app.get('/health', (req, res) => {
 // API ROUTE MOUNTING
 
 // Superadmin API (master DB)
-app.use('/api/v1/tenants', tenantRoutes);
+app.use('/api/v1/superadmin', superadminRoutes);
+
+app.use("/api/v1/auth", tenantResolver(), requireTenant, authRoutes);
+
+
 
 app.use("/api/v1/users", tenantResolver(), requireTenant, usersRoutes);
 app.use('/api/v1/leads', tenantResolver(), requireTenant, leadsRoutes);

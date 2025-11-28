@@ -2,8 +2,11 @@
 import express from "express";
 import { getLeads, createLead } from "../controllers/leads.controller.js";
 import requireTenant from "../middlewares/requireTenant.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
+
+router.use(authMiddleware);
 
 // Apply tenant middleware to all routes
 router.use(requireTenant);

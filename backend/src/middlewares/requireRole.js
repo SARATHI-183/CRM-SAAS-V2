@@ -1,4 +1,3 @@
-// src/middlewares/requireRole.js
 export function requireRole(allowedRoles = []) {
   return (req, res, next) => {
     if (!req.user) {
