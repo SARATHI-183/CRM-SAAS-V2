@@ -13,7 +13,7 @@ router.use(authMiddleware);
 router.use(requireTenant);
 
 // Only tenant_admin can create/update/delete users
-router.get("/", getAllUsers);
+router.get("/", requireRole(["tenant_admin", "sales_admin", "sales_rep"]), getAllUsers);
 
 router.post("/", requireRole(["tenant_admin"]), createUser);
 router.put("/:id", requireRole(["tenant_admin"]), updateUser);
