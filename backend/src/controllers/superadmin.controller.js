@@ -13,7 +13,7 @@ export async function superadminLogin(req, res) {
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
     const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!ok) return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ user_id: user.id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,

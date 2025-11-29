@@ -13,7 +13,7 @@ export default {
       password: process.env.DB_PASS || '123456',
     },
     migrations: {
-      directory: './src/db/migrations',
+      directory: './src/db/migrations/master',
       tableName: 'knex_migrations',
     },
     seeds: {

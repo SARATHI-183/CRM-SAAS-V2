@@ -1,19 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
 import { knex } from "../db/knex.js";
-import { createTenantSchema } from "../db/tenantSchema.js";
+import { createTenantSchema, createDefaultModules } from "../db/tenantSchema.js";
+import { createUser } from "../services/tenant.service.js";
 import bcrypt from "bcrypt";
 
 export const createTenant = async (req, res) => {
   const trx = await knex.transaction();
   try {
-    const { company_name, company_email, industry_type } = req.body;
-    if (!company_name || !company_email)
-      return res.status(400).json({ message: "company_name & company_email required" });
+    const { company_name, company_email, industry_type, admin } = req.body;
+    if (!company_name || !company_email || !admin?.name || !admin?.email || !admin?.password)
+      return res.status(400).json({ message: "Missing required fields" });
 
     const tenantId = uuidv4();
     const schemaName = `tenant_${tenantId.replace(/-/g, "")}`;
-    const password = "Admin@123";
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     // 1️⃣ Insert tenant into master.tenants
     await trx("master.tenants").insert({
@@ -24,24 +23,32 @@ export const createTenant = async (req, res) => {
       schema_name: schemaName,
     });
 
-    // 2️⃣ Create schema + tables using the same trx
-    await createTenantSchema(schemaName, trx);
+    // 2️⃣ Create schema + tables
+    await createTenantSchema(schemaName, industry_type, trx);
 
-    // 3️⃣ Insert Tenant Admin
-    await trx.raw(
-      `INSERT INTO "${schemaName}"."users" (id, name, email, password, role, is_active)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [uuidv4(), "Tenant Admin", company_email, hashedPassword, "tenant_admin", true]
+    // 3️⃣ Create default modules
+    await createDefaultModules(schemaName, trx);
+
+    // 4️⃣ Create Tenant Admin user
+    const adminUser = await createUser(
+      {
+        schema: schemaName,
+        name: admin.name,
+        email: admin.email,
+        password: admin.password,
+        role: "tenant_admin",
+      },
+      trx
     );
 
-    // 4️⃣ Commit everything
+    // 5️⃣ Commit transaction
     await trx.commit();
 
-    return res.json({
+    return res.status(201).json({
       message: "Tenant created successfully",
       tenant_id: tenantId,
       schema: schemaName,
-      temp_password: password,
+      adminUser: { id: adminUser.id, email: adminUser.email },
     });
   } catch (err) {
     await trx.rollback();
@@ -49,7 +56,6 @@ export const createTenant = async (req, res) => {
     return res.status(500).json({ message: "Tenant creation failed", error: err.message });
   }
 };
-
 
 export const getAllTenants = async (req, res) => {
   try {
@@ -68,9 +74,6 @@ export const getAllTenants = async (req, res) => {
     return res.json({ data: tenants });
   } catch (err) {
     console.error("Error fetching tenants:", err);
-    return res.status(500).json({
-      message: "Failed to fetch tenants",
-      error: err.message,
-    });
+    return res.status(500).json({ message: "Failed to fetch tenants", error: err.message });
   }
 };
