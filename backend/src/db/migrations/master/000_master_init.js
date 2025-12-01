@@ -59,22 +59,22 @@ export async function up(knex) {
     });
   }
 
-  // =========================================================
-  // master.roles
-  // =========================================================
-  if (!(await knex.schema.withSchema("master").hasTable("roles"))) {
-    await knex.schema.withSchema("master").createTable("roles", (table) => {
-      table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
-      table.string("name", 100).notNullable().unique();
-      table.integer("role_level").notNullable();
-      table.string("description", 255);
-      table.timestamps(true, true);
-    });
+  // // =========================================================
+  // // master.roles
+  // // =========================================================
+  // if (!(await knex.schema.withSchema("master").hasTable("roles"))) {
+  //   await knex.schema.withSchema("master").createTable("roles", (table) => {
+  //     table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
+  //     table.string("name", 100).notNullable().unique();
+  //     table.integer("role_level").notNullable();
+  //     table.string("description", 255);
+  //     table.timestamps(true, true);
+  //   });
 
-    await knex.schema.withSchema("master").table("roles", (table) => {
-      table.index(["role_level"], "idx_roles_role_level");
-    });
-  }
+  //   await knex.schema.withSchema("master").table("roles", (table) => {
+  //     table.index(["role_level"], "idx_roles_role_level");
+  //   });
+  // }
 
   // =========================================================
   // master.plans
@@ -216,26 +216,6 @@ export async function up(knex) {
       table.index(["tenant_id"], "idx_billing_tenant_id");
       table.index(["invoice_no"], "idx_billing_invoice_no");
       table.index(["status"], "idx_billing_status");
-    });
-  }
-
-  // =========================================================
-  // master.audit_logs
-  // =========================================================
-  if (!(await knex.schema.withSchema("master").hasTable("audit_logs"))) {
-    await knex.schema.withSchema("master").createTable("audit_logs", (table) => {
-      table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
-
-      table.uuid("user_id").references("id").inTable("master.users");
-      table.string("action", 200).notNullable();
-      table.jsonb("metadata").defaultTo("{}");
-
-      table.timestamps(true, true);
-    });
-
-    await knex.schema.withSchema("master").table("audit_logs", (table) => {
-      table.index(["user_id"], "idx_audit_logs_user_id");
-      table.index(["action"], "idx_audit_logs_action");
     });
   }
 }

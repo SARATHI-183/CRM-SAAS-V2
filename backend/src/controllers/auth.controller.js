@@ -2,6 +2,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '8h';
 
 export async function login(req, res) {

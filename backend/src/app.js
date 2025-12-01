@@ -13,7 +13,6 @@ import { knex } from './db/knex.js'; // we'll create this file
 import usersRoutes from './routes/users.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import superadminRoutes from './routes/superadmin.routes.js';
-import tenantRoutes from "./routes/tenant.routes.js";
 // import contactsRoutes from './routes/contacts.routes.js';
 import leadsRoutes from './routes/leads.routes.js';
 
@@ -46,40 +45,31 @@ app.get('/health', (req, res) => {
 });
 
 
-// API ROUTE MOUNTING
+// API ROUTE 
 
-// Superadmin API (master DB)
+// Superadmin
 app.use('/api/v1/superadmin', superadminRoutes);
 
+//Tenant Login
 app.use("/api/v1/auth", tenantResolver(), requireTenant, authRoutes);
 
-// app.use("/api/v1/tenants", tenantRoutes);
 
 app.use("/api/v1/users", tenantResolver(), requireTenant, usersRoutes);
 app.use('/api/v1/leads', tenantResolver(), requireTenant, leadsRoutes);
 
-// app.get('/api/v1/superadmin', (req, res) => {
-//   res.json({ message: 'Super Admin API working!' });
-// });
 
 // app.use('/api/v1/contacts', requireTenant(), contactsRoutes);
 
 
 
 // For now create safe dummy route:
-app.get('/api/v1/tenant-test', tenantResolver(), requireTenant, (req, res) => {
-  res.json({
-    message: 'Tenant route OK!',
-    tenantId: req.tenant.id,
-    schema: req.tenant.schema_name
-  });
-});
-
-// SUPER ADMIN ROUTE (GLOBAL)
-// ----------------------
-app.get('/api/v1/superadmin', (req, res) => {
-  res.json({ message: 'Super Admin API working!' });
-});
+// app.get('/api/v1/tenant-test', tenantResolver(), requireTenant, (req, res) => {
+//   res.json({
+//     message: 'Tenant route OK!',
+//     tenantId: req.tenant.id,
+//     schema: req.tenant.schema_name
+//   });
+// });
 
 
 // FALLBACK / 404

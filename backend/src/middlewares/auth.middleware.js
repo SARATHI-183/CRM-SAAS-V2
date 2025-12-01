@@ -10,6 +10,7 @@ export function authMiddleware(req, res, next) {
 
     const token = header.slice(7);
     const secret = process.env.JWT_SECRET;
+    
     if (!secret) return res.status(500).json({ message: 'JWT_SECRET not configured' });
 
     const payload = jwt.verify(token, secret);
@@ -19,12 +20,23 @@ export function authMiddleware(req, res, next) {
       return res.status(401).json({ message: 'Token tenant mismatch' });
     }
 
+    let roles = [];
+
+    if(Array.isArray(payload.roles)){
+      roles = payload.roles;
+    }
+
+    else if(payload.role){
+      roles = [payload.role];
+    }
+
     // Attach user info (minimal)
     req.user = {
       id: payload.user_id,
       email: payload.email,
-      role: payload.role,
       tenant_id: payload.tenant_id,
+      roles,
+      Permissions: payload.Permissions || []
     };
 
     next();

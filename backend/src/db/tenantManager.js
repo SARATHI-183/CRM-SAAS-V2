@@ -193,21 +193,72 @@ export async function getTenantMeta(lookup) {
   return meta;
 }
 
+
+// export function getTenantDb(schemaName) {
+//   if (!schemaName) throw new Error('schemaName required');
+
+//   // return a callable function
+//   const dbFn = function (tableName) {
+//     return knex.withSchema(schemaName).table(tableName);
+//   };
+
+//   // also expose helpers if needed
+//   dbFn.knex = knex;
+//   dbFn.schema = schemaName;
+//   dbFn.table = (t) => knex.withSchema(schemaName).table(t);
+//   dbFn.selectFrom = (t) => knex.withSchema(schemaName).select('*').from(t);
+//   dbFn.rawWithSchema = (sql, bindings = []) =>
+//     knex.withSchema(schemaName).raw(sql, bindings);
+
+//   dbFn.trx = (cb) =>
+//     knex.transaction((trx) =>
+//       cb({
+//         table: (t) => trx.withSchema(schemaName).table(t),
+//         raw: (sql, bindings = []) =>
+//           trx.withSchema(schemaName).raw(sql, bindings),
+//         trx,
+//       })
+//     );
+
+//   return dbFn;
+// }
+
 export function getTenantDb(schemaName) {
-  if (!schemaName) throw new Error('schemaName required');
-  return {
-    knex,
-    schema: schemaName,
-    table: (t) => knex.withSchema(schemaName).table(t),
-    selectFrom: (t) => knex.withSchema(schemaName).select('*').from(t),
-    rawWithSchema: (sql, bindings = []) => knex.withSchema(schemaName).raw(sql, bindings),
-    trx: (cb) => knex.transaction((trx) => cb({
-      table: (t) => trx.withSchema(schemaName).table(t),
-      raw: (sql, bindings = []) => trx.withSchema(schemaName).raw(sql, bindings),
-      trx,
-    })),
+  if (!schemaName) throw new Error("schemaName required");
+
+  const dbFn = function (tableName) {
+    return knex.withSchema(schemaName).table(tableName);
   };
+
+  // metadata
+  dbFn.knex = knex;           // master knex
+  dbFn.schema = schemaName;
+
+  // table helpers
+  dbFn.table = (t) => knex.withSchema(schemaName).table(t);
+  dbFn.selectFrom = (t) => knex.withSchema(schemaName).select("*").from(t);
+
+  // RAW SQL (missing in your file)
+  dbFn.raw = (sql, bindings = []) =>
+    knex.withSchema(schemaName).raw(sql, bindings);
+
+  dbFn.rawWithSchema = (sql, bindings = []) =>
+    knex.withSchema(schemaName).raw(sql, bindings);
+
+  // transaction wrapper
+  dbFn.trx = (cb) =>
+    knex.transaction((trx) =>
+      cb({
+        table: (t) => trx.withSchema(schemaName).table(t),
+        raw: (sql, bindings = []) => trx.withSchema(schemaName).raw(sql, bindings),
+        trx,
+      })
+    );
+
+  return dbFn;
 }
+
+
 
 export async function invalidateTenantCache(tenantMeta) {
   if (!tenantMeta) return;
