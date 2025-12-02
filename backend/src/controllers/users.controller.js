@@ -1118,7 +1118,15 @@ export const getSingleUser = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const roles = await getUserRoles(req.db, user.id);
-    return res.json({ user: safeUserData(user, roles) });
+    const perms = await getUserPermissions(req.db, user.id);
+    
+    return res.json({
+      user: safeUserData(
+      user,
+      roles.map(r => r.name),
+      perms
+  )
+});
   } catch (err) {
     console.error("Error fetching user:", err);
     return res.status(500).json({ message: "Failed to fetch user", error: err.message });
@@ -1147,8 +1155,20 @@ export const getAllUsers = async (req, res) => {
       usersRaw.map(async (u) => {
         const roles = await getUserRoles(req.db, u.id);
         // If role_name filter applied
-        if (role_name && !roles.includes(role_name)) return null;
-        return safeUserData(u, roles);
+        // if (role_name && !roles.includes(role_name)) return null;
+        const roleFilter = role_name?.trim().toLowerCase();
+        console.log("Filtering", roleFilter, "against", roles.map(r => r.name));
+
+        if (roleFilter && !roles.some(r => r.name.toLowerCase() === roleFilter.toLowerCase())) {
+          return null;
+        }
+
+        const perms = await getUserPermissions(req.db, u.id);
+        return safeUserData(
+          u,
+          roles.map(r => r.name),
+          perms
+        );
       })
     );
 
@@ -1172,53 +1192,6 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-/**
- * CREATE USER
- */
-// export const createUser = async (req, res) => {
-//   try {
-//     const { name, email, password, role_name = "Employee" } = req.body;
-//     if (!name || !email || !password) {
-//       return res.status(400).json({ message: "name, email, and password are required" });
-//     }
-
-//     const userId = uuidv4();
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     // Step 1: Insert user
-//     const [newUser] = await req.db("users")
-//       .insert({
-//         id: userId,
-//         name,
-//         email,
-//         password: hashedPassword,
-//         is_active: true,
-//         created_at: new Date(),
-//         updated_at: new Date(),
-//       })
-//       .returning("*");
-
-//     // Step 2: Assign role
-//     const role = await resolveTenantRole(req.db, role_name);
-//     await req.db("user_roles").insert({ user_id: userId, role_id: role.id });
-
-//     // Step 3: Audit log
-//     await auditLog(knex, {
-//       userId: req.user?.id,
-//       tenantId: req.tenant?.id,
-//       action: "USER_CREATED",
-//       resource: "user",
-//       resourceId: userId,
-//       metadata: safeUserData(newUser, [role.name]),
-//       req,
-//     });
-
-//     return res.status(201).json({ message: "User created", user: safeUserData(newUser, [role.name]) });
-//   } catch (err) {
-//     console.error("Error creating user:", err);
-//     return res.status(500).json({ message: "Failed to create user", error: err.message });
-//   }
-// };
 export const createUser = async (req, res) => {
   try {
     const { name, email, password, role_name = "Employee", permissions: permKeys = [] } = req.body;
@@ -1339,7 +1312,12 @@ export const updateUser = async (req, res) => {
       req,
     });
 
-    return res.json({ message: "User updated", user: safeUserData(updatedUser, updatedRoles) });
+    const perms = await getUserPermissions(req.db, id);
+
+    return res.json({
+      message: "User updated",
+      user: safeUserData(updatedUser, updatedRoles, perms)
+    });
   } catch (err) {
     console.error("Error updating user:", err);
     return res.status(500).json({ message: "Failed to update user", error: err.message });
@@ -1431,7 +1409,11 @@ export const restoreUser = async (req, res) => {
       req,
     });
 
-    return res.json({ message: "User restored", user: safeUserData(user, roles) });
+    const perms = await getUserPermissions(req.db, id);
+    return res.json({
+      message: "User restored",
+      user: safeUserData(user, roles, perms)
+    });
   } catch (err) {
     console.error("Error restoring user:", err);
     return res.status(500).json({ message: "Failed to restore user", error: err.message });
@@ -1451,7 +1433,13 @@ export const getSoftDeletedUsers = async (req, res) => {
       })
     );
 
-    return res.json({ data: usersWithRoles });
+    const perms = await getUserPermissions(req.db, u.id);
+    return safeUserData(
+      u,
+      roles.map(r => r.name),
+      perms
+    );
+
   } catch (err) {
     console.error("Error fetching deleted users:", err);
     return res.status(500).json({ message: "Failed to fetch deleted users", error: err.message });
