@@ -12,6 +12,7 @@ router.use(authMiddleware);
 // All routes require tenant context
 router.use(requireTenant);
 
+
 // Only tenant_admin can create/update/delete users
 router.get("/", requireRole(["tenant_admin", "sales_admin", "sales_rep"]), getAllUsers);
 

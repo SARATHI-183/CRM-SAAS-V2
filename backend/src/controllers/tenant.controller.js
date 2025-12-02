@@ -1003,7 +1003,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { knex } from "../db/knex.js";
 import { createTenantSchema, createDefaultModules } from "../db/tenantSchema.js";
-import { createUser } from "../services/tenant.service.js";
+import { createTenantUser } from "../services/tenant.service.js";
 import { auditLog } from "../utils/auditLogger.js";
 import { safeTenantData } from "../utils/safeTenantData.js";
 
@@ -1031,7 +1031,7 @@ export const createTenant = async (req, res) => {
     await createTenantSchema(schemaName, industry_type, trx);
     await createDefaultModules(schemaName, trx);
 
-    const adminUser = await createUser(
+    const adminUser = await createTenantUser(
       { schema: schemaName, name: admin.name, email: admin.email, password: admin.password, role: "tenant_admin" },
       trx
     );
