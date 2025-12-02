@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContactsStore } from "@/store/useContactsStore";
 
 import {
   Card,
@@ -95,7 +96,11 @@ export default function CustomersPage() {
     },
   ];
 
-  const [customers, setCustomers] = useState(initialData);
+  // const [customers, setCustomers] = useState(initialData);
+const customers = useContactsStore((state) => state.contacts);
+const removeContact = useContactsStore((state) => state.deleteContact);
+
+
   const tenantId = "tenant_001";
   const tenantCustomers = customers.filter((c) => c.tenantId === tenantId);
 
@@ -137,8 +142,7 @@ export default function CustomersPage() {
       </div>
 
       {/* ------------------ Filters Card ------------------ */}
-      <Card className="shadow-sm">
-        <CardContent className="py-4">
+    
           <div className="flex items-center gap-3">
             {/* Search */}
             <div className="relative w-full">
@@ -175,9 +179,7 @@ export default function CustomersPage() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </CardContent>
-      </Card>
-
+        
       {/* ------------------ Table ------------------ */}
       <Card className="shadow-sm">
         <CardHeader>
@@ -275,7 +277,7 @@ export default function CustomersPage() {
                             <AlertDialogAction
                               type="button"
                               className="bg-red-600 text-white hover:bg-red-700"
-                              onClick={() => deleteCustomer(cust.id)}
+                              onClick={() => removeContact(cust.id)}
                             >
                               Delete
                             </AlertDialogAction>

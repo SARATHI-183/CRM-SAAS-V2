@@ -12,6 +12,7 @@ import ContactsCreate from "../pages/app/contacts/ContactsCreate";
 import ContactsEdit from "../pages/app/contacts/ContactsEdit";
 
 import Leads from "../pages/app/leads/LeadList";
+import LeadsCreate from "../pages/app/leads/LeadCreate";
 import Products from "../pages/app/products/ProductList";
 import Quotes from "../pages/app/quotes/QuoteList";
 import Orders from "../pages/app/orders/OrderList";
@@ -28,6 +29,8 @@ import Ivr from "../pages/app/CommunicationSuite/Ivr";
 import Mail from "../pages/app/CommunicationSuite/mail";
 import Whatsapp from "../pages/app/CommunicationSuite/whatsapp";
 import Companies from "../pages/app/companies/CompaniesList";
+import CompaniesCreate from "../pages/app/companies/CompaniesCreate";
+import CompaniesEdit from "../pages/app/companies/CompaniesEdit";
 import Tasks from "../pages/app/tasks/tasksList";
 import Activities from "../pages/app/activities/ActivitiesList";
 
@@ -57,6 +60,7 @@ export default function AppRouter() {
         />
         <Route path="/contactsEdit/:id" element={<ContactsEdit />} />
         <Route path="/leads" element={<Leads />} />
+        <Route path="/leadsCreate" element={<LeadsCreate />} />
         <Route path="/products" element={<Products />} />
         <Route path="/quotes" element={<Quotes />} />
         <Route path="/orders" element={<Orders />} />
@@ -73,6 +77,8 @@ export default function AppRouter() {
         <Route path="/mail" element={<Mail />} />
         <Route path="/whatsapp" element={<Whatsapp />} />
         <Route path="/companies" element={<Companies />} />
+        <Route path="/companiesCreate" element={<CompaniesCreate/>} />
+         <Route path="/companiesEdit/:id" element={<CompaniesEdit/>} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/activities" element={<Activities />} />
       </Route>

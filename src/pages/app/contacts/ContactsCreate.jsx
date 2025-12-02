@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useContactsStore } from "@/store/useContactsStore";
 
 import {
   Card,
@@ -46,8 +47,11 @@ const contactSchema = yup.object().shape({
   createdAt: yup.string().required("Created date is required"),
 });
 
-export default function ContactsCreate({ addContact }) {
+// export default function ContactsCreate({ addContact }) 
+export default function ContactsCreate()
+{
   const navigate = useNavigate();
+ const addContact = useContactsStore((state) => state.addContact);
 
   // ----------------------------------------------------------
   // ✅ react-hook-form setup with Yup

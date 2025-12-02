@@ -22,3 +22,23 @@ function Input({
 }
 
 export { Input }
+// import * as React from "react";
+// import { cn } from "@/lib/utils";
+
+// function Input({ className, type, ...props }) {
+//   return (
+//     <input
+//       type={type}
+//       className={cn(
+//         "h-10 w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-base shadow-sm transition-all duration-200 placeholder:text-gray-400",
+//         "hover:border-gray-400 hover:shadow-md",
+//         "focus-visible:border-blue-600 focus-visible:ring-4 focus-visible:ring-blue-500/20 outline-none",
+//         "disabled:cursor-not-allowed disabled:opacity-50",
+//         className
+//       )}
+//       {...props}
+//     />
+//   );
+// }
+
+// export { Input };

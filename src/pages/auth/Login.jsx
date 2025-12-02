@@ -73,7 +73,7 @@ export default function Login() {
       <Card className="w-full max-w-md shadow-lg border border-gray-200 bg-white">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-2xl font-semibold text-gray-900">
-            Welcome Back 👋
+            Welcome Back 
           </CardTitle>
           <CardDescription className="text-gray-500">
             Sign in to continue to your workspace
