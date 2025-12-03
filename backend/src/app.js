@@ -16,6 +16,7 @@ import superadminRoutes from './routes/superadmin.routes.js';
 // import contactsRoutes from './routes/contacts.routes.js';
 import leadsRoutes from './routes/leads.routes.js';
 import rbacRoutes from "./modules/rbac/rbac.routes.js";
+import { authMiddleware } from './middlewares/auth.middleware.js';
 
 
 dotenv.config();
@@ -58,7 +59,7 @@ app.use("/api/v1/auth", tenantResolver(), requireTenant, authRoutes);
 
 
 
-app.use("/api/rbac", requireTenant, rbacRoutes);
+app.use("/api/v1/rbac", authMiddleware,tenantResolver(), requireTenant, rbacRoutes);
 
 
 app.use("/api/v1/users", tenantResolver(), requireTenant, usersRoutes);
