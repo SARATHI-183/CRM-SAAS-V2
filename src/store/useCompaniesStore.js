@@ -45,18 +45,49 @@
 //     return get().companies.find((c) => c.id === Number(id));
 //   },
 // }));
+// import { create } from "zustand";
+
+// export const useCompaniesStore = create((set) => ({
+//   companies: [],
+
+//   addCompany: (company) =>
+//     set((state) => ({
+//       companies: [...state.companies, company],
+//     })),
+
+//   deleteCompany: (id) =>
+//     set((state) => ({
+//       companies: state.companies.filter((c) => c.id !== id),
+//     })),
+// }));
 import { create } from "zustand";
 
-export const useCompaniesStore = create((set) => ({
+export const useCompaniesStore = create((set, get) => ({
   companies: [],
 
+  // Add a new company
   addCompany: (company) =>
     set((state) => ({
       companies: [...state.companies, company],
     })),
 
+  // Delete a company by id
   deleteCompany: (id) =>
     set((state) => ({
       companies: state.companies.filter((c) => c.id !== id),
+    })),
+
+  // Get a company by id
+  getCompanyById: (id) => {
+    const { companies } = get();
+    return companies.find((c) => c.id === id);
+  },
+
+  // Update a company by id
+  updateCompany: (id, updatedCompany) =>
+    set((state) => ({
+      companies: state.companies.map((c) =>
+        c.id === id ? { ...c, ...updatedCompany } : c
+      ),
     })),
 }));

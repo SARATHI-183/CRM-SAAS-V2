@@ -30,7 +30,7 @@ export default function CompaniesEdit() {
   const getCompanyById = useCompaniesStore((state) => state.getCompanyById);
   const updateCompany = useCompaniesStore((state) => state.updateCompany);
 
-  const company = getCompanyById(id);
+ const company = getCompanyById(Number(id));
 
   const [form, setForm] = useState({
     company: "",

@@ -535,10 +535,10 @@ export default function CompaniesCreate() {
                 <SelectTrigger className="focus:ring-blue-400 focus:border-blue-400 ">
                   <SelectValue placeholder="Choose status" />
                 </SelectTrigger>
-                <SelectContent className=" bg-white hover:bg-gray-100">
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Lead">Lead</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectContent className=" bg-white">
+                  <SelectItem value="Active"className=" hover:bg-gray-100">Active</SelectItem>
+                  <SelectItem value="Lead"className=" hover:bg-gray-100">Lead</SelectItem>
+                  <SelectItem value="Inactive"className=" hover:bg-gray-100">Inactive</SelectItem>
                 </SelectContent>
               </Select>
               {errors.status && <p className="text-red-600 text-sm">{errors.status.message}</p>}

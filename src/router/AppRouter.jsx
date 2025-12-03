@@ -13,6 +13,8 @@ import ContactsEdit from "../pages/app/contacts/ContactsEdit";
 
 import Leads from "../pages/app/leads/LeadList";
 import LeadsCreate from "../pages/app/leads/LeadCreate";
+import LeadsEdit from "../pages/app/leads/LeadEdit";
+import LeadDetails from "../pages/app/leads/LeadDetails";
 import Products from "../pages/app/products/ProductList";
 import Quotes from "../pages/app/quotes/QuoteList";
 import Orders from "../pages/app/orders/OrderList";
@@ -61,6 +63,8 @@ export default function AppRouter() {
         <Route path="/contactsEdit/:id" element={<ContactsEdit />} />
         <Route path="/leads" element={<Leads />} />
         <Route path="/leadsCreate" element={<LeadsCreate />} />
+        <Route path="/leadsEdit/:id" element={<LeadsEdit />} />
+        <Route path="/leadDetails/:id" element={<LeadDetails />} />
         <Route path="/products" element={<Products />} />
         <Route path="/quotes" element={<Quotes />} />
         <Route path="/orders" element={<Orders />} />

@@ -27,12 +27,13 @@ export default function LeadsCreate() {
     phone: "",
     source: "",
     status: "New",
+    assignedTo:"",
     nextFollowUp: "",
     tenantId: "tenant_001",
   });
 
   const statusOptions = ["New", "Contacted", "Qualified", "Quoted", "Negotiation", "Won", "Lost"];
-
+ const assignedToOptions=["Staff-1","Satff-2","Staff-3","Staff-4"];
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -145,15 +146,35 @@ export default function LeadsCreate() {
                 <SelectTrigger id="status" className="mt-1 w-full">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {statusOptions.map((status) => (
-                    <SelectItem key={status} value={status}>
+                    <SelectItem key={status} value={status} className=" hover:bg-gray-50">
                       {status}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+            {/* Assigned to */}
+            <div>
+              <Label htmlFor="assignedTo">Assigned To</Label>
+              <Select
+                value={form.assignedTo}
+                onValueChange={(value) => setForm((prev) => ({ ...prev, assignedTo: value }))}
+              >
+                <SelectTrigger id="assignedTo" className="mt-1 w-full">
+                  <SelectValue placeholder="Select assigned to" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {assignedToOptions.map((assignedTo) => (
+                    <SelectItem key={assignedTo} value={assignedTo} className=" hover:bg-gray-50">
+                      {assignedTo}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+           
 
             {/* Next Follow-Up */}
             <div>

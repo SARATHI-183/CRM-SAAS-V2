@@ -125,6 +125,15 @@ const removeContact = useContactsStore((state) => state.deleteContact);
   const deleteCustomer = (id) => {
     setCustomers((prev) => prev.filter((c) => c.id !== id));
   };
+   const [page, setPage] = useState(1);
+const [rowsPerPage, setRowsPerPage] = useState(5);
+
+const totalPages = Math.ceil(filteredCustomers.length / rowsPerPage);
+
+const paginatedData = filteredCustomers.slice(
+  (page - 1) * rowsPerPage,
+  page * rowsPerPage
+);
 
   return (
     <div className="space-y-6">
@@ -163,17 +172,17 @@ const removeContact = useContactsStore((state) => state.deleteContact);
                 </Button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className=" bg-white hover:bg-gray-100">
-                <DropdownMenuItem onClick={() => setStatusFilter("All")}>
+              <DropdownMenuContent className=" bg-white">
+                <DropdownMenuItem onClick={() => setStatusFilter("All")}className="hover:bg-gray-50">
                   All
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("Active")}>
+                <DropdownMenuItem onClick={() => setStatusFilter("Active")}className="hover:bg-gray-50">
                   Active
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("Lead")}>
+                <DropdownMenuItem onClick={() => setStatusFilter("Lead")}className="hover:bg-gray-50">
                   Lead
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("Inactive")}>
+                <DropdownMenuItem onClick={() => setStatusFilter("Inactive")}className="hover:bg-gray-50">
                   Inactive
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -191,14 +200,14 @@ const removeContact = useContactsStore((state) => state.deleteContact);
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Company</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="bg-gray-100 text-sm">
+                <TableHead className="px-3 py-2">Name</TableHead>
+                <TableHead className="px-3 py-2">Company</TableHead>
+                <TableHead className="px-3 py-2">Email</TableHead>
+                <TableHead className="px-3 py-2">Phone</TableHead>
+                <TableHead className="px-3 py-2">Status</TableHead>
+                <TableHead className="px-3 py-2">Created</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -210,8 +219,8 @@ const removeContact = useContactsStore((state) => state.deleteContact);
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredCustomers.map((cust) => (
-                  <TableRow key={cust.id}>
+                paginatedData.map((cust) => (
+               <TableRow key={cust.id}>
                     <TableCell className="font-medium text-gray-800">
                       {cust.name}
                     </TableCell>
@@ -291,8 +300,59 @@ const removeContact = useContactsStore((state) => state.deleteContact);
               )}
             </TableBody>
           </Table>
+         
+
         </CardContent>
       </Card>
+       {/* ---------------- Pagination Controls ---------------- */}
+<div className="flex justify-end items-center mt-4 gap-4">
+
+  {/* Rows per page dropdown */}
+  <div className="flex items-center gap-2">
+    <span className="text-sm text-gray-600">Rows per page:</span>
+
+    <select
+      value={rowsPerPage}
+      onChange={(e) => {
+        setRowsPerPage(Number(e.target.value));
+        setPage(1); // reset to first page
+      }}
+      className="border rounded-md px-2 py-1"
+    >
+      <option value={5}>5</option>
+      <option value={10}>10</option>
+      <option value={20}>20</option>
+    </select>
+  </div>
+
+  {/* Page Navigation */}
+  <div className="flex items-center gap-2">
+
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === 1}
+      onClick={() => setPage(page - 1)}
+    >
+      Prev
+    </Button>
+
+    <span className="text-sm text-gray-700">
+      Page {page} of {totalPages}
+    </span>
+
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={page === totalPages}
+      onClick={() => setPage(page + 1)}
+    >
+      Next
+    </Button>
+
+  </div>
+</div>
     </div>
+    
   );
 }

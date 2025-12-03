@@ -169,10 +169,10 @@ export default function ContactsCreate()
                   <SelectValue placeholder="Choose status" />
                 </SelectTrigger>
 
-                <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Lead">Lead</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectContent className="bg-white">
+                  <SelectItem value="Active"className="hover:bg-gray-50">Active</SelectItem>
+                  <SelectItem value="Lead"className="hover:bg-gray-50">Lead</SelectItem>
+                  <SelectItem value="Inactive"className="hover:bg-gray-50">Inactive</SelectItem>
                 </SelectContent>
               </Select>
 

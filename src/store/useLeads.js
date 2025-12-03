@@ -298,6 +298,7 @@ export const useLeads = create((set, get) => {
       phone: "+91 9876543210",
       source: "Website",
       status: "New",
+      assignedTo:"Staff-2",
       nextFollowUp: "2025-12-05",
       industryType: "Software",
     },
@@ -310,6 +311,7 @@ export const useLeads = create((set, get) => {
       phone: "+91 9988776655",
       source: "Referral",
       status: "Contacted",
+      assignedTo:"Staff-3",
       nextFollowUp: "2025-12-08",
       industryType: "Consulting",
     },
@@ -322,6 +324,7 @@ export const useLeads = create((set, get) => {
       phone: "+91 7766554433",
       source: "Cold Call",
       status: "Qualified",
+      assignedTo:"Staff-1",
       nextFollowUp: "2025-12-10",
       industryType: "Automobile",
     },
@@ -425,6 +428,12 @@ export const useLeads = create((set, get) => {
       set((state) => ({
         leads: state.leads.filter((l) => l.id !== id),
       })),
+       updateLead: (id, updatedLead) =>
+    set((state) => ({
+      leads: state.leads.map((lead) =>
+        lead.id === id ? { ...lead, ...updatedLead } : lead
+      ),
+    })),
 
     addLead: (lead) =>
       set((state) => ({
